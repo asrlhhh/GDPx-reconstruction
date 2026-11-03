@@ -1,0 +1,31 @@
+schema_version = "1.4"
+# the agent's answer file is collected and copied into the verifier sandbox (needed if the verifier runs separately)
+artifacts = ["/workspace/analysis_output.json"]
+source = "Reconstructed from 12 LatchBio rollouts (claude-opus-5-5, gemini-4-argon, glm-5-3, gpt-6-astra; 3 runs each). See RECONSTRUCTION.md."
+
+[task]
+name = "latchbio/binding-arm-matched-pair"
+description = "From raw cell-titration and single-cycle-kinetics chip data on 12 one-arm/two-arm antibody variants, pick the one-arm/two-arm pair matched on binding strength for an in vivo arm-number comparison."
+keywords = ["antibody", "valency", "avidity", "flow-cytometry", "ec50", "spr", "single-cycle-kinetics", "xlsx"]
+
+[metadata]
+category = "biology"
+subcategory = "antibody binding / assay interpretation"
+difficulty = "hard"
+difficulty_explanation = "Two planted near-identities: cell EC50 construct_05/construct_10 (format-fair assay) vs naive chip 1:1 KD construct_11/construct_12 (format-split SPR protocol, avidity on a receptor-coated chip, S109 fast component). Also secondary-only background, low_event_count wells, construct-specific Hill slopes, Top-tier decoys, bulk refractive-index steps, buffer-blank double referencing, variable sampling rates, sample_ref -> construct mapping."
+answer_key_confidence = "moderate (~0.5): an adversarial 5-judge panel preferred 05/10 unanimously; main alternative 11/12 (~0.2), within-cell alternative 05/01 (~0.08) if Hill is fixed at 1"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 21600.0
+
+[environment]
+build_timeout_sec = 3600.0
+cpus = 6
+memory_mb = 65536
+storage_mb = 51200
+gpus = 0
+network_mode = "no-network"
+workdir = "/workspace"
